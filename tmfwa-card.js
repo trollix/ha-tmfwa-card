@@ -2,7 +2,7 @@ const LitElement = Object.getPrototypeOf(customElements.get("ha-panel-lovelace")
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
-const CARD_VERSION = '0.1.1';
+const CARD_VERSION = '0.1.2';
 
 console.info(
   `%c  TMFWA-CARD  %c  Version ${CARD_VERSION}  `,
@@ -117,15 +117,15 @@ class TMFWACard extends LitElement {
   _getLevelFromColor( pColor ) {
 
     if (pColor == 'Vert') {
-      return level1;
+      return 'level1';
     } else if (pColor == 'Jaune') {
-      return level2;
+      return 'level2';
     } else if (pColor == 'Orange') {
-      return level3
+      return 'level3';
     } else if (pColor == 'Rouge') {
-      return level4
+      return 'level4';
     } else {
-      return level0;
+      return 'level0';
     }
 
   }
