@@ -2,7 +2,7 @@ const LitElement = Object.getPrototypeOf(customElements.get("ha-panel-lovelace")
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
-const CARD_VERSION = '0.1.4';
+const CARD_VERSION = '0.1.5';
 
 console.info(
   `%c  TMFWA-CARD  %c  Version ${CARD_VERSION}  `,
@@ -164,7 +164,7 @@ class TMFWACard extends LitElement {
       res.push({
         nomAlerte: 'Vagues-submersion',
         niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Vagues-submersion']),
-        icon: 'mdi:weather'
+        icon: 'mdi:waves'
       })
       //res.push({
       //  nomAlerte: 'Canicule',
