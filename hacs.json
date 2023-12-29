@@ -1,5 +1,5 @@
 {
-    "name": "France Pollens card",
+    "name": "Météo France Weather Alert Card",
     "content_in_root": "true",
     "filename": "tmfwa-card.js",
     "render_readme": "true",
