@@ -2,7 +2,7 @@ const LitElement = Object.getPrototypeOf(customElements.get("ha-panel-lovelace")
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
-const CARD_VERSION = '0.0.3';
+const CARD_VERSION = '0.1.0';
 
 console.info(
   `%c  TMFWA-CARD  %c  Version ${CARD_VERSION}  `,
@@ -68,31 +68,31 @@ class TMFWACard extends LitElement {
       
       res.push({
         nomAlerte: 'Vent violent',
-        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Vent violent']
+        niveauAlerte:  _getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Vent violent'])
       })
       res.push({
         nomAlerte: 'Inondation',
-        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Inondation']
+        niveauAlerte:  _getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Inondation'])
       })
       res.push({
         nomAlerte: 'Orages',
-        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Orages']
+        niveauAlerte:  _getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Orages'])
       })
       res.push({
         nomAlerte: 'Pluie-inondation',
-        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Pluie-inondation']
+        niveauAlerte:  _getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Pluie-inondation'])
       })
       res.push({
         nomAlerte: 'Neige-verglas',
-        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Neige-verglas']
+        niveauAlerte:  _getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Neige-verglas'])
       })
       res.push({
         nomAlerte: 'Grand-froid',
-        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Grand-froid']
+        niveauAlerte:  _getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Grand-froid'])
       })
       res.push({
         nomAlerte: 'Vagues-submersion',
-        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Vagues-submersion']
+        niveauAlerte:  _getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Vagues-submersion'])
       })
 
     }
@@ -112,6 +112,22 @@ class TMFWACard extends LitElement {
       ...defaultConfig,
       ...config
     };
+  }
+
+  _getLevelFromColor( pColor ) {
+
+    if (pColor == 'Vert') {
+      return level1;
+    } else if (pColor == 'Jaune') {
+      return level2;
+    } else if (pColor == 'Orange') {
+      return level3
+    } else if (pColor == 'Rouge') {
+      return level4
+    } else {
+      return level0;
+    }
+
   }
   
   render() {
