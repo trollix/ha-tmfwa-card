@@ -2,13 +2,29 @@ const LitElement = Object.getPrototypeOf(customElements.get("ha-panel-lovelace")
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
-const CARD_VERSION = '0.0.1';
+const CARD_VERSION = '0.0.2';
 
 console.info(
   `%c  TMFWA-CARD  %c  Version ${CARD_VERSION}  `,
   'color: white; font-weight: bold; background: crimson',
   'color: #000; font-weight: bold; background: #ddd',
 );
+
+//-----------------------------------------------
+// Attributs de sensor.33_weather_alert
+//-----------------------------------------------
+// Vent violent: Vert
+// Inondation: Vert
+// Orages: Vert
+// Pluie-inondation: Vert
+// Neige-verglas: Vert
+// Grand-froid: Vert
+// Vagues-submersion: Vert
+// attribution: Data provided by Météo-France
+// icon: mdi:weather-cloudy-alert
+// friendly_name: 33 Weather alert
+//-----------------------------------------------
+
 
 function hasConfigOrEntityChanged(element, changedProps) {
   if (changedProps.has("config")) {
@@ -35,30 +51,60 @@ class TMFWACard extends LitElement {
     };
   }
   
-  _getPollens(hass, sensor_name, above_level) {
+  _getAlertes(hass, sensor_name, above_level) {
+    
     var res = [];
 
     if (typeof hass.states[`sensor.${sensor_name}`] != "undefined") {
-      const data1 = hass.states[`sensor.${sensor_name}`].attributes['risks'];
-      //console.log(data1);
-      Object.keys(data1 || {}).forEach(function (key) {
-        if ( parseInt(data1[key].level, 10) >= above_level ) {
-          res.push({
-            name: data1[key].pollenName,
-            concentration: "level" + data1[key].level,
-          });
-        }
-      });
+
+      const sVentViolent        = hass.states[`sensor.${sensor_name}`].attributes['Vent violent'];
+      const sInondation         = hass.states[`sensor.${sensor_name}`].attributes['Inondation'];
+      const sOrages             = hass.states[`sensor.${sensor_name}`].attributes['Orages'];
+      const sPluieInondation    = hass.states[`sensor.${sensor_name}`].attributes['Pluie-inondation'];
+      const sNeigeVerglas       = hass.states[`sensor.${sensor_name}`].attributes['Neige-verglas'];
+      const sGrandFroid         = hass.states[`sensor.${sensor_name}`].attributes['Grand-froid'];
+      const sVaguesSubmersion   = hass.states[`sensor.${sensor_name}`].attributes['Vagues-submersion'];
+      const sAttribution        = hass.states[`sensor.${sensor_name}`].attributes['attribution'];
+      
+      res.push({
+        nomAlerte: 'Vent violent',
+        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Vent violent']
+      })
+      res.push({
+        nomAlerte: 'Inondation',
+        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Inondation']
+      })
+      res.push({
+        nomAlerte: 'Orages',
+        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Orages']
+      })
+      res.push({
+        nomAlerte: 'Pluie-inondation',
+        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Pluie-inondation']
+      })
+      res.push({
+        nomAlerte: 'Neige-verglas',
+        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Neige-verglas']
+      })
+      res.push({
+        nomAlerte: 'Grand-froid',
+        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Grand-froid']
+      })
+      res.push({
+        nomAlerte: 'Vagues-submersion',
+        niveauAlerte:  hass.states[`sensor.${sensor_name}`].attributes['Vagues-submersion']
+      })
+
     }
     return res;
   }
   
   setConfig(config) {
     const defaultConfig = {
-      'no_pollens_label': 'No pollens',
-      'sensor_name': 'pollens2',
+      'no_alert_label': 'Aucune alerte',
+      'sensor_name': '33_weather_alert',
       'above_level': 1,
-      'title': 'Pollens',
+      'title': 'Alertes Météo',
       'icon': 'mdi:square'
     }
   
@@ -72,25 +118,27 @@ class TMFWACard extends LitElement {
     if (!this.config || !this.hass) {
       return html``;
     }
-    //console.log('pollens fr')
-    const pollens = this._getPollens(this.hass, this.config.sensor_name, this.config.above_level);
+    
+    //console.log('--- LOG tmfwa ---')
+    const alertes = this._getAlertes(this.hass, this.config.sensor_name, this.config.above_level);
+
     return html`
       <ha-card header="${this.config.title}">
-          <div id="tixpollenfr">
-          ${pollens.length > 0
-            ? html`<div class="ok-pollen">${pollens.map(pollen => this.renderPollen(pollen))}</div>`
-            : html`<div class="no-pollen">${this.config.no_pollens_label}</div>`
+          <div id="tmfwacard">
+          ${alertes.length > 0
+            ? html`<div class="ok-alerte">${alertes.map(alerte => this.renderAlerte(alerte))}</div>`
+            : html`<div class="no-alerte">${this.config.no_alert_label}</div>`
           }
           </div>
       </ha-card>
     `;
   }
   
-  renderPollen(pollen) {
+  renderAlerte(alerte) {
     return html
     `
-      <div class="in-pollen"><ha-icon icon="${this.config.icon}" class="${pollen.concentration} levelicon"></ha-icon>
-      ${pollen.name}</div>
+      <div class="in-alerte"><ha-icon icon="${this.config.icon}" class="${alerte.niveauAlerte} levelicon"></ha-icon>
+      ${alerte.nomAlerte}</div>
     `;
   }
   
@@ -100,19 +148,19 @@ class TMFWACard extends LitElement {
   
   static get styles() {
     return css`
-    #tixpollenfr {
+    #tmfwacard {
       margin-top: 0.4em;
       padding-bottom: 0.8em;
       display: flex;
     }
-    .ok-pollen {
+    .ok-alerte {
       margin-left: 2em;
       margin-right: 2em;
       margin: auto;
       display: float;
       width: auto;
     }
-    .in-pollen {
+    .in-alerte {
        margin: 0px 0px 0px 15px;
        padding: 1px 0px 0px 0px;
        float: left;
@@ -137,7 +185,7 @@ class TMFWACard extends LitElement {
     .levelicon {
       --mdc-icon-size: 2em;
     }
-    .no-pollens {
+    .no-alertes {
       margin-left: 1.4em;
     }
     `;

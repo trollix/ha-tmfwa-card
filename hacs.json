@@ -1,7 +1,7 @@
 {
     "name": "France Pollens card",
     "content_in_root": "true",
-    "filename": "tpollensfr-card.js",
+    "filename": "tmfwa-card.js",
     "render_readme": "true",
     "country": ["FR"]
   }
