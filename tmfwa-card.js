@@ -2,7 +2,7 @@ const LitElement = Object.getPrototypeOf(customElements.get("ha-panel-lovelace")
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
-const CARD_VERSION = '0.1.2';
+const CARD_VERSION = '0.1.4';
 
 console.info(
   `%c  TMFWA-CARD  %c  Version ${CARD_VERSION}  `,
@@ -23,7 +23,72 @@ console.info(
 // attribution: Data provided by Météo-France
 // icon: mdi:weather-cloudy-alert
 // friendly_name: 33 Weather alert
+
+/* Vent Violent */
+/* Pluie Innondation */
+/* Orages */
+/* Crue */
+/* Neige Verglas */
+/* Canicule */
+/* Grand Froid */
+/* Avalanche */
+/* Vague Submersion */
+/* Cyclone */
+/* Forte Houle */
+/* Fortes Pluies-orages */
+/* Verglas */
+/* Mer dangereuse à la côte*/
+/* BMS */
+/* Alerte Cyclonique */
+
 //-----------------------------------------------
+/*
+
+.block_legend .inner .legend > li i {
+  margin-right: 5px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%; }
+
+  .block_legend .inner .legend > li p {
+	text-align: left;
+	color: #333333;
+	font-size: 11px;
+}
+
+
+<div class="inner">
+<ul class="legend">
+<li>
+  <i aria-label="Vigilance orange" style="background-color: rgb(255, 184, 43);"></i> 
+  <p><strong>Soyez très vigilant </strong> 
+    <span><b>Soyez très vigilant</b> : des phénomènes dangereux sont prévus. Tenez-vous au courant de l'évolution de la situation et suivez les conseils de sécurité émis par les pouvoirs publics.</span>
+  </p>
+</li> 
+<li>
+  <i aria-label="Vigilance jaune" style="background-color: rgb(255, 246, 0);"></i> 
+  <p><strong>Soyez attentif</strong> 
+    <span><b>Soyez attentif</b> si vous pratiquez des activités sensibles aux risques météorologiques ou à proximité d'un rivage ou d'un cours d'eau. Des phénomènes habituels dans la région mais occasionnellement et localement dangereux (exemple : mistral, orage d'été, montée des eaux, fortes vagues submergeant le littoral) sont en effet prévus. Tenez-vous au courant de l'évolution de la situation.</span>
+  </p>
+</li> 
+<li>
+  <i aria-label="Pas de vigilance" style="background-color: rgb(49, 170, 53);"></i> 
+  <p>
+    <strong class="no-hide-mobile">Pas de vigilance particulière</strong>
+    </p>
+</li>
+<li>
+   <i aria-label="Vigilance rouge" style="background-color: rgb(204, 0, 0);"></i>
+   <p><strong>Vigilance absolue</strong> 
+     <span><b>Une vigilance absolue s'impose</b> : des phénomènes dangereux d'intensité exceptionnelle sont prévus. Tenez-vous régulièrement au courant de la situation et respectez impérativement les consignes de sécurité émises par les pouvoirs publics.</span>
+   </p>
+</li>
+</ul>
+</div>
+
+*/
+
+
 
 
 function hasConfigOrEntityChanged(element, changedProps) {
@@ -68,32 +133,44 @@ class TMFWACard extends LitElement {
       
       res.push({
         nomAlerte: 'Vent violent',
-        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Vent violent'])
+        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Vent violent']),
+        icon: 'mdi:weather-windy'
       })
       res.push({
         nomAlerte: 'Inondation',
-        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Inondation'])
+        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Inondation']),
+        icon: 'mdi:waves-arrow-up'
       })
       res.push({
         nomAlerte: 'Orages',
-        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Orages'])
+        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Orages']),
+        icon: 'mdi:weather-lightning'
       })
       res.push({
         nomAlerte: 'Pluie-inondation',
-        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Pluie-inondation'])
+        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Pluie-inondation']),
+        icon: 'mdi:weather-pouring'
       })
       res.push({
         nomAlerte: 'Neige-verglas',
-        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Neige-verglas'])
+        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Neige-verglas']),
+        icon: 'mdi:snowflake'
       })
       res.push({
         nomAlerte: 'Grand-froid',
-        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Grand-froid'])
+        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Grand-froid']),
+        icon: 'mdi:snowman'
       })
       res.push({
         nomAlerte: 'Vagues-submersion',
-        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Vagues-submersion'])
+        niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Vagues-submersion']),
+        icon: 'mdi:weather'
       })
+      //res.push({
+      //  nomAlerte: 'Canicule',
+      //  niveauAlerte:  this._getLevelFromColor(hass.states[`sensor.${sensor_name}`].attributes['Canicule']),
+      //  icon: 'mdi:weather-sunny'
+      //})
 
     }
     return res;
@@ -153,7 +230,7 @@ class TMFWACard extends LitElement {
   renderAlerte(alerte) {
     return html
     `
-      <div class="in-alerte"><ha-icon icon="${this.config.icon}" class="${alerte.niveauAlerte} levelicon"></ha-icon>
+      <div class="in-alerte"><ha-icon icon="${alerte.icon}" class="${alerte.niveauAlerte} levelicon"></ha-icon>
       ${alerte.nomAlerte}</div>
     `;
   }
